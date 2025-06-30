@@ -1,6 +1,6 @@
-package slicesdemo
+package main
 
-// package main
+// package slicesdemo
 
 import "fmt"
 
@@ -31,6 +31,36 @@ func sliceEqual(x, y []int) bool {
 	return true
 }
 
+// gopl.io/ch4/append
+func appendInt(x []int, newElement int) []int {
+	var z []int
+	zlen := len(x) + 1
+	if zlen <= cap(x) { // if there is capacity
+		z = x[:zlen] // extend the slice length
+	} else {
+		// There is insufficient space. Allocate a new array slice.
+		// Grow by doubling, for amortized linear complexity.
+		zcap := max(zlen, 2*len(x))
+		z = make([]int, zlen, zcap) // create a new slice with the new capacity
+		copy(z, x)                  // a built-in function to copy elements from x to z
+	}
+	z[len(x)] = newElement // append the new element
+	return z
+}
+
+// func appendInt(x []int, newElement int) []int {
+//   if len(x) < cap(x) { // if there is capacity, append the new element
+//     x = x[:len(x)+1] // extend the slice length
+//     x[len(x)-1] = newElement
+//     return x
+//   }
+//   // if no capacity, create a new slice with double the capacity and copy elements
+//   newSlice := make([]int, len(x), 2*cap(x)+1)
+//   copy(newSlice, x)
+//   newSlice[len(x)] = newElement
+//   return newSlice
+// }
+
 func main() {
 	months := [...]string{
 		1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June",
@@ -53,10 +83,11 @@ func main() {
 		}
 	}
 
-	// Slice beyond capacity i.e., cap(slice) causes a panic, but slicing beyong len(slice)
-	// extends the slice without panic.
-	fmt.Println("Slicing beyond capacity: ", summer[:20]) // panic: out of range
-	endlessSummer := summer[:5]                           // extends the slice without panic (within capacity)
+	// // Slice beyond capacity i.e., cap(slice) causes a panic,
+	// fmt.Println("Slicing beyond capacity: ", summer[:20]) // panic: out of range
+	//
+	// but slicing beyond len(slice) extends the slice without panic.
+	endlessSummer := summer[:5] // extends the slice without panic (within capacity)
 	fmt.Println("Endless Summer: ", endlessSummer)
 
 	// a slice contains a pointer to an underlying array,
@@ -81,4 +112,21 @@ func main() {
 	sli = []int(nil)                       // sli is nil, len(sli) == 0
 	sli = []int{}                          // len(sli) == 0, sli != nil
 	fmt.Println(sli, len(sli), sli == nil) // Output: [] 0 true
+
+	var runes []rune
+	for _, r := range "Hello, 世界" {
+		runes = append(runes, r) // appending runes to the slice
+	}
+	fmt.Printf("%q\n", runes) // ['H' 'e' 'l' 'l' 'o' ',' ' ' '世' '界']
+
+	// using to achieve the same, with build-in conversion function `[]rune()` of rune slices
+	runes = []rune("Hello, 世界") // creating a rune slice from a string
+	fmt.Printf("%q\n", runes)   // ['H' 'e' 'l' 'l' 'o' ',' ' ' '世' '界']
+
+	var x, y []int
+	for i := range 10 {
+		y = appendInt(x, i) // appending integers to the slice
+		fmt.Printf("%d cap=%d\t %v\n", i, cap(y), y)
+		x = y
+	}
 }
