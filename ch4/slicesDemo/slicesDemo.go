@@ -59,7 +59,26 @@ func main() {
 	endlessSummer := summer[:5]                           // extends the slice without panic (within capacity)
 	fmt.Println("Endless Summer: ", endlessSummer)
 
+	// a slice contains a pointer to an underlying array,
+	// hence passing a slice to a function allows the function to modify the original underlying array.
 	nums := [...]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 	reverse(nums[:]) // reverse the entire array
 	fmt.Println("Reversed nums:", nums)
+
+	slice1 := []int{1, 2, 3, 4, 5}
+	fmt.Println("Original slice:", slice1)
+	fmt.Println("Rotated slice:", rotate(slice1, 2)) // Rotate the slice by 2 positions
+
+	// slice literal implicitly creates an array variable of the right size and yields a slice that points to it.
+	slice2 := []int{1, 2, 3, 4, 5}
+	fmt.Println("Slice 1 equals Slice 2: ", sliceEqual(slice1, slice2)) // Check if slices are equal
+	// slices are not comparable, so we cannot use `==` operator directly.
+
+	// The zero value of a slice is nil, which is different from an empty slice.
+	// slice zero values demo
+	var sli []int                          // len(sli) == 0, sli == nil
+	sli = nil                              // sli is nil, len(sli) == 0
+	sli = []int(nil)                       // sli is nil, len(sli) == 0
+	sli = []int{}                          // len(sli) == 0, sli != nil
+	fmt.Println(sli, len(sli), sli == nil) // Output: [] 0 true
 }
