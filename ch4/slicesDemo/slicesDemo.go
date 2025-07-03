@@ -61,6 +61,49 @@ func appendInt(x []int, newElement int) []int {
 //   return newSlice
 // }
 
+// gopl.io/ch4/nonempty
+// NonEmpty returns a slice holding only the non-empty strings from the input slice.
+// The underlying array is modified during the call.
+func nonempty(strings []string) []string {
+	// The zero value of a slice is nil, which is different from an empty slice.
+	// A nil slice has no underlying array, so it cannot be modified.
+	// An empty slice has an underlying array of length 0, so it can be modified.
+	// Hence, we can use the zero value of a slice to check if the input slice is nil or empty.
+	if len(strings) == 0 {
+		return strings // return the empty slice
+	}
+
+	i := 0
+	for _, s := range strings {
+		if s != "" {
+			strings[i] = s // keep the non-empty string
+			i++
+		}
+	}
+	return strings[:i] // return the modified slice with non-empty strings
+}
+
+func nonempty2(strings []string) []string {
+	out := strings[:0] // zero-length slice with the same underlying array
+	for _, s := range strings {
+		if s != "" {
+			out = append(out, s)
+		}
+	}
+	return out
+}
+
+// To remove an element from the middle of a slice,
+// preserving the other of the remaining elements,
+// use copy to slide the elements to the left.
+func remove(slice []int, i int) []int {
+	if i < 0 || i >= len(slice) {
+		return slice // return the original slice if index is out of range
+	}
+	copy(slice[i:], slice[i+1:]) // shift elements to the left
+	return slice[:len(slice)-1]  // return the modified slice
+}
+
 func main() {
 	months := [...]string{
 		1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June",
@@ -129,4 +172,21 @@ func main() {
 		fmt.Printf("%d cap=%d\t %v\n", i, cap(y), y)
 		x = y
 	}
+
+	stringData := []string{"Hello", "", "World", "", "Go", "Programming", ""}
+	fmt.Printf("%q\n", nonempty(stringData))  // ["Hello" "World" "Go" "Programming"]
+	fmt.Printf("%q\n", nonempty2(stringData)) // ["Hello" "World" "Go" "Programming"]
+	fmt.Printf("%q\n", stringData)            // `["Hello" "World" "Go" "Programming" "Go" "Programming" ""]`
+
+	// Stack implementation using slices
+	stack := []int{}
+	stack = append(stack, 1, 2, 3)
+	v := 4
+	stack = append(stack, v)     // push v onto the stack
+	top := stack[len(stack)-1]   // top element of the stack
+	stack = stack[:len(stack)-1] // pop the top element
+	fmt.Printf("Stack after push and pop: %v, top: %d\n", stack, top)
+
+	slice := []int{5, 6, 7, 8, 9}
+	fmt.Println(remove(slice, 2)) // Remove element at index 2, output: [5 6 8 9]
 }
