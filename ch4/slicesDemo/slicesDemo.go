@@ -174,9 +174,10 @@ func main() {
 	}
 
 	stringData := []string{"Hello", "", "World", "", "Go", "Programming", ""}
-	fmt.Printf("%q\n", nonempty(stringData))  // ["Hello" "World" "Go" "Programming"]
-	fmt.Printf("%q\n", nonempty2(stringData)) // ["Hello" "World" "Go" "Programming"]
-	fmt.Printf("%q\n", stringData)            // `["Hello" "World" "Go" "Programming" "Go" "Programming" ""]`
+	fmt.Printf("%q\n", nonempty(stringData)) // ["Hello" "World" "Go" "Programming"]
+	stringDataCopy := []string{"Hello", "", "World", "", "Go", "Programming", ""}
+	fmt.Printf("%q\n", nonempty2(stringDataCopy)) // ["Hello" "World" "Go" "Programming"]
+	fmt.Printf("%q\n", stringData)                // `["Hello" "World" "Go" "Programming" "Go" "Programming" ""]`
 
 	// Stack implementation using slices
 	stack := []int{}
