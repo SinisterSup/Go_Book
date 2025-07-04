@@ -190,13 +190,52 @@ func main() {
 
 	slice := []int{5, 6, 7, 8, 9}
 	fmt.Println(remove(slice, 2)) // Remove element at index 2, output: [5 6 8 9]
+
+	arrayPntr := &[...]int{1, 3, 5, 7, 9}
+	fmt.Println("Original array pointer:", arrayPntr)
+	reverseArr(arrayPntr) // Reverse the array using a pointer
+	fmt.Println("Reversed array pointer:", arrayPntr)
+
+	slice = []int{2, 4, 6, 8, 10, 12}
+	fmt.Println("Original slice to be rotated:", slice)
+	slice = rotateSlice(slice, 2) // Rotate the slice in a single pass
+	fmt.Println("Rotated slice in single pass:", slice)
+
+	intSlice := []int{4, 5, 6, 6, 7, 7, 7, 3, 3, 9, 1, 1, 1, 1, 2, 2, 4, 8}
+	fmt.Println("Original intSlice with adjacent duplicates ", intSlice)
+	intSlice = discardAdjDuplicates(intSlice)
+	fmt.Println("Discarded adjacent Duplicates in-place:", intSlice)
 }
 
 /* Exercise 4.3: Rewrite reverse to use an array pointer instead of a slice. */
+func reverseArr(arrP *[5]int) {
+	for l, r := 0, len(arrP)-1; l < r; l, r = l+1, r-1 {
+		(*arrP)[l], (*arrP)[r] = (*arrP)[r], (*arrP)[l]
+	}
+}
 
 /* Exercise 4.4: Write a version of rotate that operates in a single pass. */
+func rotateSlice(slice []int, k int) []int {
+	if len(slice) == 0 || k <= 0 || k >= len(slice) {
+		return slice // return the original slice if empty or i is out of range
+	}
+	k %= len(slice)
+	// slice = append(slice[k:], slice[:k]...) // rotate the slice in a single pass
+	// return slice
+	return append(slice[k:], slice[:k]...)
+}
 
 /* Exercise 4.5: Write an in-place function to eliminate adjacent duplicates in a []string slice. */
+func discardAdjDuplicates(intSlice []int) []int {
+	i := 1
+	for _, val := range intSlice[1:] {
+		if val != intSlice[i-1] {
+			intSlice[i] = val
+			i++
+		}
+	}
+	return intSlice[:i]
+}
 
 /* Exercise 4.6: Write an in-place function that squashes each run of adjacent Unicode spaces
 * (see unicode.IsSpace) in a UTF-8 encoded []byte slice into a single ASCII space. */
