@@ -2,7 +2,10 @@ package main
 
 // package slicesdemo
 
-import "fmt"
+import (
+	"fmt"
+	"unicode/utf8"
+)
 
 // gopl.io/ch4/rev
 // function reverse reverses a slices of ints in place.
@@ -205,6 +208,19 @@ func main() {
 	fmt.Println("Original intSlice with adjacent duplicates ", intSlice)
 	intSlice = discardAdjDuplicates(intSlice)
 	fmt.Println("Discarded adjacent Duplicates in-place:", intSlice)
+
+	testStr := "Hello, 世界"
+	fmt.Println("Original string:", testStr)
+	reversedStr := reverseString(testStr)
+	fmt.Println("Reversed string:", reversedStr)
+
+	helloBytes := []byte("Hello, 世界") // []byte{72, 101, 108, 108, 111, 44, 32, 228, 184, 150, 229, 155, 189}
+	fmt.Println("Original byte slice:", helloBytes)
+	// reverseBytes(helloBytes)
+	// fmt.Println("Reversed byte slice:", helloBytes)
+	reverseUTF8ByteSlice(helloBytes) // Reverse the byte slice in place
+	fmt.Println("Reversed byte slice:", helloBytes)
+	fmt.Println("Reversed byte slice as string:", string(helloBytes))
 }
 
 /* Exercise 4.3: Rewrite reverse to use an array pointer instead of a slice. */
@@ -242,3 +258,27 @@ func discardAdjDuplicates(intSlice []int) []int {
 
 /* Exercise 4.7: Modify reverse to reverse the characters of a []byte slice that represents a
 * UTF-8 encoded string, in place. Can you do it without allocating new memory? */
+func reverseString(str string) string {
+	runes := []rune(str)
+	for l, r := 0, len(runes)-1; l < r; l, r = l+1, r-1 {
+		runes[l], runes[r] = runes[r], runes[l]
+	}
+	return string(runes)
+}
+
+func reverseBytes(s []byte) {
+	for l, r := 0, len(s)-1; l < r; l, r = l+1, r-1 {
+		s[l], s[r] = s[r], s[l]
+	}
+}
+
+func reverseUTF8ByteSlice(s []byte) {
+	reverseBytes(s) // reverse the byte slice
+	i := 0
+	for i < len(s) {
+		_, size := utf8.DecodeRune(s[i:]) // decode the rune at index i
+		// Reverse the bytes within this single character.
+		reverseBytes(s[i : i+size]) // reverse the bytes of the rune
+		i += size                   // move to the next rune
+	}
+}
