@@ -70,3 +70,15 @@ func main() {
 	ages["bob"]++
 	fmt.Println("Comparing updated 'ages' map - equal(ages, agesNew):", equal(ages, agesNew))
 }
+
+// Sometimes we need a map or set whose keys are slices
+// but, map's keys must be comparable,
+// Hece for slices, we need to use a workaround.
+// First, we convert the slice to a string, using a helper function like k
+// maps each key to string representation of the slice.
+// Then we can use the string(applying the helper function) before using it as a key in the map.
+var m = make(map[string]int)
+
+func k(list []string) string  { return fmt.Sprintf("eq %v", list) }
+func Add(list []string)       { m[k(list)]++ }
+func Count(list []string) int { return m[k(list)] }
