@@ -82,3 +82,26 @@ var m = make(map[string]int)
 func k(list []string) string  { return fmt.Sprintf("eq %v", list) }
 func Add(list []string)       { m[k(list)]++ }
 func Count(list []string) int { return m[k(list)] }
+
+// The value type of a map can itself be a composite type, such as a map, slice, or struct.
+// gopl.io/ch4/graph
+var graph = make(map[string]map[string]bool)
+
+func AddEdge(from, to string) {
+	edges := graph[from]
+	if edges == nil {
+		edges = make(map[string]bool)
+		graph[from] = edges
+	}
+	edges[to] = true
+}
+
+func HasEdge(from, to string) bool {
+	return graph[from][to]
+}
+
+// This HasEdge shows how the zero value of a missing map entry can be often put to work:
+// 1. if `from` is not a key in `graph`, then `graph[from]` returns nil,
+// and the expression `graph[from][to]` evaluates to false without causing a panic.
+// 2. if `from` is a key in `graph`, but `to` is not a key in the map
+// then zero value of the map's value type(false) is returned.
