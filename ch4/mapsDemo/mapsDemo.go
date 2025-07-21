@@ -105,3 +105,10 @@ func HasEdge(from, to string) bool {
 // and the expression `graph[from][to]` evaluates to false without causing a panic.
 // 2. if `from` is a key in `graph`, but `to` is not a key in the map
 // then zero value of the map's value type(false) is returned.
+
+/* Exercise 4.8: Modify charcount to count the number of occurrences of each Unicode category
+* count letters, digits, punctuation, and so on in their Unicode categories., using the unicode package. */
+
+/* Exercise 4.9: Write a program wordfreq to report the frequency of each word in an input text file.
+* Call input.Split(bufio.ScanWords) before the first call to Scan to break the input
+* into words instead of lines. */
