@@ -1,0 +1,4 @@
+This is a test file for Go's unicode character counting.
+It contains English letters, both uppercase and lowercase: AabbCcDd.
+It also includes digits: 0123456789.
+Here are some special characters: !@#$%^&*()_+{}[]|:;"'<>,.?/~`
