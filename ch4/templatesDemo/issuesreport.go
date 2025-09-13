@@ -1,9 +1,10 @@
+// package templatesDemo
 package main
 
 import (
-	"jsonDemo/githubissues"
 	"log"
 	"os"
+	"templatesDemo/githubissues"
 	"text/template"
 	"time"
 )
@@ -30,7 +31,8 @@ func daysAgo(t time.Time) int {
 	return int(time.Since(t).Hours() / 24)
 }
 
-func main() {
+func reportGitHubIssues() {
+	// func main() {
 	// report, err := template.New("report").
 	// 	Funcs(template.FuncMap{"daysAgo": daysAgo}).
 	// 	Parse(templ)
